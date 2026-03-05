@@ -1,1 +1,1 @@
-from . import base, gaussian
+from . import base, gaussian, bernoulli_gamma
