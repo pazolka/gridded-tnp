@@ -23,7 +23,6 @@ from ..models.base import (
     NeuralProcess,
     OOTGConditionalNeuralProcess,
 )
-from ..models.convcnp import GriddedConvCNP
 
 
 class ModelCheckpointer:
@@ -98,6 +97,8 @@ def np_pred_fn(
     batch: Batch,
     num_samples: int = 1,
 ) -> torch.distributions.Distribution:
+    from ..models.convcnp import GriddedConvCNP
+
     if isinstance(model, GriddedConvCNP):
         pred_dist = model(mc=batch.mc_grid, y=batch.y_grid, mt=batch.mt_grid)
     elif isinstance(model, MultiModalConditionalNeuralProcess):
