@@ -63,6 +63,7 @@ class ModuleOnFourierExpandedInput(nn.Module):
             )
             for n in range(num_fourier)
         ]
+        #print(periods)
         self.fourier_expansion = lambda x: torch.cat(
             [torch.sin(x / period.to(x.device)) for period in periods], dim=-1
         )

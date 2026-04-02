@@ -55,6 +55,10 @@ class SWINAttentionLayer(nn.Module):
             )
         )
 
+        # print(f"Input shape: {x.shape}")
+        # print(f"Grid shape: {grid_shape}")
+        # print(f"Padded grid shape: {padded_grid_shape}")
+
         # Check if window divides grid. If not, add padding + correct mask.
         if not torch.all(grid_shape % self.window_sizes == 0):
             warnings.warn(
