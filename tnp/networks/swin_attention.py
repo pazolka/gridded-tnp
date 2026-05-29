@@ -17,6 +17,12 @@ def _to_int_list(values) -> List[int]:
         return [int(v) for v in values.detach().cpu().tolist()]
     return [int(v) for v in values]
 
+def _to_int_list(values) -> List[int]:
+    if torch.is_tensor(values):
+        return [int(v) for v in values.detach().cpu().tolist()]
+    return [int(v) for v in values]
+
+
 class SWINAttentionLayer(nn.Module):
     def __init__(
         self,
