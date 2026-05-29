@@ -78,8 +78,8 @@ def reduce_to_grid(
     nearest_idx, _ = nearest_gridded_neighbours(x, x_grid, k=1)
     nearest_idx = nearest_idx[..., 0]
 
-    n_batch_idx = torch.arange(num_batches).unsqueeze(-1).repeat(1, num_points)
-    n_range_idx = torch.arange(num_points).repeat(num_batches, 1)
+    n_batch_idx = torch.arange(num_batches, device=z.device).unsqueeze(-1).repeat(1, num_points)
+    n_range_idx = torch.arange(num_points, device=z.device).repeat(num_batches, 1)
 
     _, inverse_indices = torch.unique(nearest_idx, return_inverse=True)
 

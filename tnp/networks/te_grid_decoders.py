@@ -48,7 +48,7 @@ class TEMHCAGridDecoder(GridDecoder):
             )
 
             batch_idx = (
-                torch.arange(num_batches)
+                torch.arange(num_batches, device=zt.device)
                 .unsqueeze(-1)
                 .unsqueeze(-1)
                 .repeat(1, nt, nearest_idx.shape[-1])
