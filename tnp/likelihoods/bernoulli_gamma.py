@@ -115,24 +115,13 @@ class BernoulliGammaDistribution:
         """Compute log probability density.
         
         Args:
-            value: Observed values [..., dim_y] (may be a Masked object from neuralprocesses)
+            value: Observed values [..., dim_y]
         
         Returns:
             Log probability [..., dim_y]
         """
-        # Handle Masked objects from neuralprocesses
-        # Extract the underlying tensor if value is a Masked object
-        from neuralprocesses.mask import Masked
-        if isinstance(value, Masked):
-            # For Masked objects, use the underlying value and apply mask after
-            value_tensor = value.value
-            mask = value.mask
-        else:
-            value_tensor = value
-            mask = None
-        
         # Identify zero and non-zero values
-        is_zero = (value_tensor == 0.0)
+        is_zero = (value == 0.0)
         
         # Initialize log prob with log P(Z=0) for all values
         log_prob_zero = torch.log(1 - self.probs + 1e-8)
@@ -141,15 +130,11 @@ class BernoulliGammaDistribution:
         # Use where to avoid indexing issues
         log_prob_nonzero = (
             torch.log(self.probs + 1e-8) +
-            self.gamma.log_prob(torch.clamp(value_tensor, min=1e-8))  # Clamp to avoid gamma(0)
+            self.gamma.log_prob(torch.clamp(value, min=1e-8))  # Clamp to avoid gamma(0)
         )
         
         # Select appropriate log prob based on whether value is zero
         log_prob = torch.where(is_zero, log_prob_zero, log_prob_nonzero)
-        
-        # Apply mask if present (set masked values to zero for averaging)
-        if mask is not None:
-            log_prob = log_prob * (~mask).float()
         
         return log_prob
     
