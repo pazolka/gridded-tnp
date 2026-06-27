@@ -21,6 +21,8 @@ def dropout_all(
             dropout = torch.ones(x.shape[:1]).to(x)
         else:
             dropout = torch.bernoulli(torch.ones(x.shape[:1]) * (1 - p_dropout)).to(x)
+            if p_dropout < 1.0:
+                dropout = dropout / (1 - p_dropout)
 
     out = (x.transpose(0, -1) * dropout).transpose(0, -1)
     if return_dropout:

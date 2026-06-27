@@ -139,10 +139,12 @@ class MultiHeadSelfTEAttentionLayer(BaseMultiHeadTEAttentionLayer):
         self, z: torch.Tensor, x: torch.Tensor, mask: Optional[torch.Tensor] = None
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         if self.norm_first:
-            z, x = self.attn_block(self.norm1(z), x, mask)
+            z_attn, x = self.attn_block(self.norm1(z), x, mask)
+            z = z + z_attn
             z = z + self.ff_block(self.norm2(z))
         else:
-            z, x = self.norm1(z + self.attn_block(z, x, mask))
+            z_attn, x = self.attn_block(z, x, mask)
+            z = self.norm1(z + z_attn)
             z = z + self.ff_block(self.norm2(z))
 
         return z, x
@@ -191,10 +193,12 @@ class MultiHeadCrossTEAttentionLayer(BaseMultiHeadTEAttentionLayer):
         mask: Optional[torch.Tensor] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         if self.norm_first:
-            zq, xq = self.attn_block(self.norm1(zq), self.norm1(zkv), xq, xkv, mask)
+            zq_attn, xq = self.attn_block(self.norm1(zq), self.norm1(zkv), xq, xkv, mask)
+            zq = zq + zq_attn
             zq = zq + self.ff_block(self.norm2(zq))
         else:
-            zq, xq = self.norm1(zq + self.attn_block(zq, zkv, xq, xkv, mask))
+            zq_attn, xq = self.attn_block(zq, zkv, xq, xkv, mask)
+            zq = self.norm1(zq + zq_attn)
             zq = zq + self.ff_block(self.norm2(zq))
 
         return zq, xq

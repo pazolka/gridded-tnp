@@ -56,13 +56,14 @@ class ModuleOnFourierExpandedInput(nn.Module):
         periods = [
             torch.stack(
                 [
-                    (2 * abs(self.x_range[1, dim] - self.x_range[0, dim])) // (n + 1)
+                    (2 * abs(self.x_range[1, dim] - self.x_range[0, dim])) / (n + 1)
                     for dim in range(len(self.x_range[0]))
                 ],
                 dim=-1,
             )
             for n in range(num_fourier)
         ]
+        #print(periods)
         self.fourier_expansion = lambda x: torch.cat(
             [torch.sin(x / period.to(x.device)) for period in periods], dim=-1
         )

@@ -63,7 +63,7 @@ class MHCAGridDecoder(GridDecoder):
             )
 
             batch_idx = (
-                torch.arange(num_batches)
+                torch.arange(num_batches, device=zt.device)
                 .unsqueeze(-1)
                 .unsqueeze(-1)
                 .repeat(1, nt, nearest_idx.shape[-1])
@@ -144,7 +144,7 @@ class SetConvGridDecoder(GridDecoder):
                 roll_dims=self.roll_dims,
             )
             batch_idx = (
-                torch.arange(num_batches)
+                torch.arange(num_batches, device=xt.device)
                 .unsqueeze(-1)
                 .unsqueeze(-1)
                 .repeat(1, nt, nearest_idx.shape[-1])

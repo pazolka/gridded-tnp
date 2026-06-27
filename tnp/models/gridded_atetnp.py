@@ -53,7 +53,7 @@ class GriddedATETNPEncoder(nn.Module):
             if self.force_dropout:
                 zc_basis = dropout_all(zc_basis, 1.0, True)
             else:
-                zc_basis = dropout_all(zc_basis, self.p_basis_dropout)
+                zc_basis = dropout_all(zc_basis, self.p_basis_dropout, self.training)
 
             # Sum grid values with basis functions.
             zc = zc + zc_basis
@@ -129,7 +129,7 @@ class MultiModalGriddedATETNPEncoder(nn.Module):
             # Take only the spatial dimensions
             if self.grid_encoder.time_dim is not None:
                 zc_basis = self.basis_fn(
-                    xc[..., torch.arange(xc.shape[-1]) != self.grid_encoder.time_dim]
+                    xc[..., torch.arange(xc.shape[-1], device=xc.device) != self.grid_encoder.time_dim]
                 )
             else:
                 zc_basis = self.basis_fn(xc)
@@ -138,7 +138,7 @@ class MultiModalGriddedATETNPEncoder(nn.Module):
             if self.force_dropout:
                 zc_basis = dropout_all(zc_basis, 1.0, True)
             else:
-                zc_basis = dropout_all(zc_basis, self.p_basis_dropout)
+                zc_basis = dropout_all(zc_basis, self.p_basis_dropout, self.training)
 
             # Sum grid values with basis functions.
             zc = zc + zc_basis
@@ -211,7 +211,7 @@ class OOTGGriddedATETNPEncoder(nn.Module):
             if self.force_dropout:
                 zc_basis = dropout_all(zc_basis, 1.0, True)
             else:
-                zc_basis = dropout_all(zc_basis, self.p_basis_dropout)
+                zc_basis = dropout_all(zc_basis, self.p_basis_dropout, self.training)
 
             # Sum grid values with basis functions.
             zc = zc + zc_basis
