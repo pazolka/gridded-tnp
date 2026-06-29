@@ -479,10 +479,10 @@ def construct_nearest_neighbour_matrix(
         assert concatenate_x_grid == False
 
     # For constructing tensors later on.
-    n_batch_idx = torch.arange(num_batches).unsqueeze(-1).repeat(1, num_points)
-    n_range_idx = torch.arange(num_points).repeat(num_batches, 1)
-    m_batch_idx_flat = torch.arange(num_batches).repeat_interleave(num_grid_points)
-    m_range_idx_flat = torch.arange(num_grid_points).repeat(num_batches)
+    n_batch_idx = torch.arange(num_batches, device=x.device).unsqueeze(-1).repeat(1, num_points)
+    n_range_idx = torch.arange(num_points, device=x.device).repeat(num_batches, 1)
+    m_batch_idx_flat = torch.arange(num_batches, device=x.device).repeat_interleave(num_grid_points)
+    m_range_idx_flat = torch.arange(num_grid_points, device=x.device).repeat(num_batches)
 
     # Max patch size.
     max_patch = cumcount_idx.amax() + (2 if concatenate_x_grid else 1)
@@ -503,7 +503,7 @@ def construct_nearest_neighbour_matrix(
     ]
 
     if concatenate_x_grid:
-        joint_grid[torch.arange(num_batches * num_grid_points), -1] = x_grid_flat[
+        joint_grid[torch.arange(num_batches * num_grid_points, device=x.device), -1] = x_grid_flat[
             m_batch_idx_flat, m_range_idx_flat
         ]
 

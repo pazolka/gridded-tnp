@@ -129,7 +129,7 @@ class MultiModalGriddedATETNPEncoder(nn.Module):
             # Take only the spatial dimensions
             if self.grid_encoder.time_dim is not None:
                 zc_basis = self.basis_fn(
-                    xc[..., torch.arange(xc.shape[-1]) != self.grid_encoder.time_dim]
+                    xc[..., torch.arange(xc.shape[-1], device=xc.device) != self.grid_encoder.time_dim]
                 )
             else:
                 zc_basis = self.basis_fn(xc)
